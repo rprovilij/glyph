@@ -212,7 +212,7 @@ if __name__ == '__main__':
     analyzer = SentimentIntensityAnalyzer()
     cg = CoinGeckoAPI()
 
-    # Top 20 coins (no-stable or exchange coins) with 10k community members + 5 coins of (personal) interest.
+    # Top 20 coins (no-stable or exchange coins) with >10k community members, plus 5 coins of (personal) interest.
     crypto        = ["bitcoin", "ethereum", "cardano", "solana", "ripple",
                      "polkadot", "terra-luna", "dogecoin", "avalanche-2", "shiba-inu",
                      "matic-network", "cosmos", "litecoin", "chainlink", "algorand",
