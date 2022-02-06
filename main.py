@@ -119,7 +119,7 @@ def store(token, subreddit):
     path = "C:/Users/rprovilij/python_projects/GLYPH/data/{token}/{sort}/".format(token=token, sort=sort_by)
     path_prep(path)
 
-    print(">>> Storing price and sentiment values...", sub)
+    print(">>> Storing price and sentiment values:", sub)
     db = "{path}{token}.db".format(path=path, token=token)
     try:
         con = sqlite3.connect(db)
@@ -175,7 +175,7 @@ def store(token, subreddit):
 
 
 def new():
-    print(">>> Running 'NEW' process...")
+    print(">>> Sorting by 'NEW'...", datetime.now())
     try:
         for tok, sub in zip(crypto, subreddits):
             store(tok, reddit.subreddit(sub).new(limit=100))
@@ -185,13 +185,10 @@ def new():
             print(">>> Trying again in 10s... ", praw_error)
             time.sleep(10)
             continue
-    finally:
-        if prawcore.exceptions.ResponseException:
-            print(">>> Could not proceed...", datetime.now())
 
 
 def hot():
-    print(">>> Running 'HOT' process...")
+    print(">>> Sorting by 'HOT'...", datetime.now())
     try:
         for tok, sub in zip(crypto, subreddits):
             store(tok, reddit.subreddit(sub).hot(limit=100))
@@ -201,13 +198,10 @@ def hot():
             print(">>> Trying again in 10s... ", praw_error)
             time.sleep(10)
             continue
-    finally:
-        if prawcore.exceptions.ResponseException:
-            print(">>> Could not proceed...", datetime.now())
 
 
 def search():
-    print(">>> Running 'SEARCH' process...")
+    print(">>> Running 'SEARCH' process...", datetime.now())
     try:
         for tok, sub in zip(crypto, subreddits):
             store(tok, reddit.subreddit("CryptoCurrency").search(tok, sort="top", syntax="cloudsearch", time_filter="day"))
@@ -217,9 +211,6 @@ def search():
             print(praw_error, ">>> Trying again in 10s... ")
             time.sleep(10)
             continue
-    finally:
-        if prawcore.exceptions.ResponseException:
-            print(">>> Could not proceed...", datetime.now())
 
 
 def main():
