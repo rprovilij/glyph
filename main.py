@@ -1,6 +1,7 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from datetime import datetime, timedelta
 from pycoingecko import CoinGeckoAPI
+import prawcore.exceptions
 import statistics
 import schedule
 import sqlite3
@@ -175,23 +176,50 @@ def store(token, subreddit):
 
 def new():
     print(">>> Running 'NEW' process...")
-    for tok, sub in zip(crypto, subreddits):
-        store(tok, reddit.subreddit(sub).new(limit=100))
-    print(">>> Process complete", datetime.now(), "| API calls left: ", reddit.auth.limits['remaining'])
+    try:
+        for tok, sub in zip(crypto, subreddits):
+            store(tok, reddit.subreddit(sub).new(limit=100))
+        print(">>> Process complete", datetime.now(), "| API calls left: ", reddit.auth.limits['remaining'])
+    except prawcore.exceptions.ResponseException as praw_error:
+        for i in range(90):
+            print(">>> Trying again in 10s... ", praw_error)
+            time.sleep(10)
+            continue
+    finally:
+        if prawcore.exceptions.ResponseException:
+            print(">>> Could not proceed...", datetime.now())
 
 
 def hot():
     print(">>> Running 'HOT' process...")
-    for tok, sub in zip(crypto, subreddits):
-        store(tok, reddit.subreddit(sub).hot(limit=100))
-    print(">>> Process complete", datetime.now(), "| API calls left: ", reddit.auth.limits['remaining'])
+    try:
+        for tok, sub in zip(crypto, subreddits):
+            store(tok, reddit.subreddit(sub).hot(limit=100))
+        print(">>> Process complete", datetime.now(), "| API calls left: ", reddit.auth.limits['remaining'])
+    except prawcore.exceptions.ResponseException as praw_error:
+        for i in range(90):
+            print(">>> Trying again in 10s... ", praw_error)
+            time.sleep(10)
+            continue
+    finally:
+        if prawcore.exceptions.ResponseException:
+            print(">>> Could not proceed...", datetime.now())
 
 
 def search():
     print(">>> Running 'SEARCH' process...")
-    for tok, sub in zip(crypto, subreddits):
-        store(tok, reddit.subreddit("CryptoCurrency").search(tok, sort="top", syntax="cloudsearch", time_filter="day"))
-    print(">>> Process complete", datetime.now(), "| API calls left: ", reddit.auth.limits['remaining'])
+    try:
+        for tok, sub in zip(crypto, subreddits):
+            store(tok, reddit.subreddit("CryptoCurrency").search(tok, sort="top", syntax="cloudsearch", time_filter="day"))
+        print(">>> Process complete", datetime.now(), "| API calls left: ", reddit.auth.limits['remaining'])
+    except prawcore.exceptions.ResponseException as praw_error:
+        for i in range(90):
+            print(praw_error, ">>> Trying again in 10s... ")
+            time.sleep(10)
+            continue
+    finally:
+        if prawcore.exceptions.ResponseException:
+            print(">>> Could not proceed...", datetime.now())
 
 
 def main():
