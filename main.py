@@ -199,6 +199,19 @@ def hot():
             time.sleep(10)
             continue
 
+            
+def top():
+    print(">>> Sorting by 'TOP'...", datetime.now())
+    try:
+        for tok, sub in zip(crypto, subreddits):
+            store(tok, reddit.subreddit(sub).top(limit=50))
+        print(">>> Process complete", datetime.now(), "| API calls left: ", reddit.auth.limits['remaining'])
+    except prawcore.exceptions.ResponseException as praw_error:
+        for i in range(90):
+            print(">>> Trying again in 10s... ", praw_error)
+            time.sleep(10)
+            continue
+            
 
 def search():
     print(">>> Running 'SEARCH' process...", datetime.now())
@@ -216,6 +229,7 @@ def search():
 def main():
     schedule.every(4).hours.do(new)
     schedule.every().day.at("23:59").do(hot)
+    schedule.every().day.at("23:59").do(top)
     schedule.every().day.at("23:59").do(search)
 
 
