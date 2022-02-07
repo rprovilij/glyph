@@ -178,7 +178,7 @@ def new():
     print(">>> Sorting by 'NEW'...", datetime.now())
     try:
         for tok, sub in zip(crypto, subreddits):
-            store(tok, reddit.subreddit(sub).new(limit=100))
+            store(tok, reddit.subreddit(sub).new(limit=50))
         print(">>> Process complete", datetime.now(), "| API calls left: ", reddit.auth.limits['remaining'])
     except prawcore.exceptions.ResponseException as praw_error:
         for i in range(90):
@@ -191,7 +191,7 @@ def hot():
     print(">>> Sorting by 'HOT'...", datetime.now())
     try:
         for tok, sub in zip(crypto, subreddits):
-            store(tok, reddit.subreddit(sub).hot(limit=100))
+            store(tok, reddit.subreddit(sub).hot(limit=50))
         print(">>> Process complete", datetime.now(), "| API calls left: ", reddit.auth.limits['remaining'])
     except prawcore.exceptions.ResponseException as praw_error:
         for i in range(90):
